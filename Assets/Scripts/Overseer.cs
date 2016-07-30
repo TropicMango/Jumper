@@ -6,9 +6,9 @@ public class Overseer : MonoBehaviour {
 	public GameObject FloorBlock;
 	private Vector3 CurrentLoc;
 	private float cooldown = 0.61F;
-	public float NextGen=0;
+	public float NextGen = 0;
 
-	// Use this for initialization
+    // TODO: Global / static variables for tile height and widgth
 	void Start () {
 		CurrentLoc = new Vector3 (0, 5, 0);
 		Instantiate (FloorBlock, CurrentLoc, Quaternion.identity);
@@ -20,7 +20,6 @@ public class Overseer : MonoBehaviour {
 		}
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if (Time.time > NextGen) {
 			GenerateBlock ();
