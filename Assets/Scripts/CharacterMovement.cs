@@ -8,7 +8,7 @@ public class CharacterMovement : MonoBehaviour {
 
     // TODO: Make this cleaner
     private GestureRecognizer.SwipeDirection direction = GestureRecognizer.SwipeDirection.Up;
-    private GestureRecognizer.SwipeDirection queueDirection = GestureRecognizer.SwipeDirection.Up;
+    //private GestureRecognizer.SwipeDirection queueDirection = GestureRecognizer.SwipeDirection.Up;
 
     void Start () {
         pivot = new Vector3 (transform.position.x + 2.5F, transform.position.y, transform.position.z);
@@ -32,46 +32,49 @@ public class CharacterMovement : MonoBehaviour {
 //            }
 //        }
 
-        if (degrees >= 180) {
-            degrees = 0;
-            transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
+		if (degrees >= 180) {
+			degrees = 0;
+			transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
+			if (direction == GestureRecognizer.SwipeDirection.Up) {
+				transform.position = new Vector3 (pivot.x + 2.5F, pivot.y, pivot.z);
+			} else {
+				transform.position = new Vector3 (pivot.x, pivot.y, pivot.z + 2.5F);
+			}
 
-            direction = queueDirection;
 
-            switch (direction) {
-            case GestureRecognizer.SwipeDirection.Up:
-                pivot = new Vector3 (transform.position.x + 2.5F, 8, transform.position.z);
-                break;
-            case GestureRecognizer.SwipeDirection.Down:
+
+
+			switch (direction) {
+			case GestureRecognizer.SwipeDirection.Up:
+				pivot = new Vector3 (transform.position.x + 2.5F, 8, transform.position.z);
+				break;
+			/*case GestureRecognizer.SwipeDirection.Down:
                 pivot = new Vector3 (transform.position.x - 2.5F, 8, transform.position.z);
-                break;
-            case GestureRecognizer.SwipeDirection.Left:
-                pivot = new Vector3 (transform.position.x, 8, transform.position.z + 2.5F);
-                break;
-            case GestureRecognizer.SwipeDirection.Right:
+                break;*/
+			case GestureRecognizer.SwipeDirection.Left:
+				pivot = new Vector3 (transform.position.x, 8, transform.position.z + 2.5F);
+				break;
+			/*case GestureRecognizer.SwipeDirection.Right:
                 pivot = new Vector3 (transform.position.x, 8, transform.position.z - 2.5F);
-                break;
+                break;*/
 
-            default:
-                Debug.Log ("??");
-                break;
+			default:
+				Debug.Log ("??");
+				break;
+			}
+				
+//__________________________________Testing Only does not effect phones (I think)_________________________________
+
+            if (Input.anyKey) { // replace with finger down
+				direction = GestureRecognizer.SwipeDirection.Left;
+                pivot = new Vector3 (transform.position.x, transform.position.y, transform.position.z + 2.5F);
+				transform.Rotate (new Vector3 (0, -90, 0));
+            } else {
+				direction = GestureRecognizer.SwipeDirection.Up;
+                pivot = new Vector3 (transform.position.x + 2.5F, transform.position.y, transform.position.z);
             }
 
-        }
-
-//            if (direction == 0) {
-//                transform.position = new Vector3 (pivot.x + 2.5F, pivot.y, pivot.z);
-//            } else {
-//                transform.position = new Vector3 (pivot.x, pivot.y, pivot.z + 2.5F);
-//            }
-
-//            if (Input.anyKey) { // replace with finger down
-//                direction = 1;
-//                pivot = new Vector3 (transform.position.x, transform.position.y, transform.position.z + 2.5F);
-//            } else {
-//                direction = 0;
-//                pivot = new Vector3 (transform.position.x + 2.5F, transform.position.y, transform.position.z);
-//            }
+		}
 
     }
 
@@ -88,38 +91,38 @@ public class CharacterMovement : MonoBehaviour {
     // TODO: Remove constants (2.5F, 8)
     void ChangeDirection(GestureRecognizer.SwipeDirection direction) {
         if (degrees >= 0 && degrees < 180) {
-            queueDirection = direction;
+			this.direction = direction;
         }
     }
 
     void LateUpdate() { //the update after everything have updated
 
-        switch (direction) {
-        case GestureRecognizer.SwipeDirection.Up:
-            transform.RotateAround (pivot, Vector3.forward, -speed * Time.deltaTime);
-            break;
-        case GestureRecognizer.SwipeDirection.Down:
-            transform.RotateAround (pivot, Vector3.back, -speed * Time.deltaTime);
-            break;
-        case GestureRecognizer.SwipeDirection.Left:
-            transform.RotateAround (pivot, Vector3.left, -speed * Time.deltaTime);
-            break;
-        case GestureRecognizer.SwipeDirection.Right:
-            transform.RotateAround (pivot, Vector3.right, -speed * Time.deltaTime);
-            break;
-
-        default:
-            Debug.Log ("??");
-            break;
-        }
-
-//      if (direction == 0) {
+//        switch (direction) {
+//        case GestureRecognizer.SwipeDirection.Up:
 //            transform.RotateAround (pivot, Vector3.forward, -speed * Time.deltaTime);
-//            //transform.Rotate (new Vector3 (0, 0, -speed * Time.deltaTime));
-//        } else {
+//            break;
+//        /*case GestureRecognizer.SwipeDirection.Down:
+//            transform.RotateAround (pivot, Vector3.back, -speed * Time.deltaTime); // we do not turn this way
+//            break;*/
+//        case GestureRecognizer.SwipeDirection.Left:
 //            transform.RotateAround (pivot, Vector3.left, -speed * Time.deltaTime);
-//            //transform.Rotate (new Vector3 (0, 0, -speed * Time.deltaTime));
+//            break;
+//        /*case GestureRecognizer.SwipeDirection.Right:
+//            transform.RotateAround (pivot, Vector3.right, -speed * Time.deltaTime); // we do not turn this way
+//            break;*/
+//
+//        default:
+//            Debug.Log ("??");
+//            break;
 //        }
+
+      if (direction == 0) {
+            transform.RotateAround (pivot, Vector3.forward, -speed * Time.deltaTime);
+            transform.Rotate (new Vector3 (0, 0, speed * Time.deltaTime));
+        } else {
+            transform.RotateAround (pivot, Vector3.left, -speed * Time.deltaTime);
+			transform.Rotate (new Vector3 (0, 0, speed * Time.deltaTime));
+        }
 
         degrees += speed * Time.deltaTime;
     }

@@ -13,7 +13,7 @@ public class TileScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (DeathTime < Time.time) {
-			transform.Translate (new Vector3 (0, -5 * Time.deltaTime, 0));
+			transform.Translate (new Vector3 (0, -3 * Time.deltaTime, 0));
 		}
 		if (transform.position.y < -5) {
 			Destroy (this.gameObject);
