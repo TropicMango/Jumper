@@ -3,8 +3,10 @@ using System.Collections;
 
 public class CharacterMovement : MonoBehaviour {
     private Vector3 pivot;
+	private bool OnFloor=true;
     public int speed = 250;
     public double degrees;
+
 
     // TODO: Make this cleaner
     private GestureRecognizer.SwipeDirection direction = GestureRecognizer.SwipeDirection.Up;
@@ -12,6 +14,7 @@ public class CharacterMovement : MonoBehaviour {
 
     void Start () {
         pivot = new Vector3 (transform.position.x + 2.5F, transform.position.y, transform.position.z);
+		direction = GestureRecognizer.SwipeDirection.Up;
     }
 
     // TODO: Clean up
@@ -31,48 +34,51 @@ public class CharacterMovement : MonoBehaviour {
 //                Debug.Log (degrees);
 //            }
 //        }
-
 		if (degrees >= 180) {
-			degrees = 0;
-			transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
-			if (direction == GestureRecognizer.SwipeDirection.Up) {
-				transform.position = new Vector3 (pivot.x + 2.5F, pivot.y, pivot.z);
-			} else {
-				transform.position = new Vector3 (pivot.x, pivot.y, pivot.z + 2.5F);
-			}
+			if (OnFloor) {
+				degrees = 0;
+				transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
+				if (direction == GestureRecognizer.SwipeDirection.Up) {
+					transform.position = new Vector3 (pivot.x + 2.5F, pivot.y, pivot.z);
+				} else {
+					transform.position = new Vector3 (pivot.x, pivot.y, pivot.z + 2.5F);
+				}
 
 
 
 
-			switch (direction) {
-			case GestureRecognizer.SwipeDirection.Up:
-				pivot = new Vector3 (transform.position.x + 2.5F, 8, transform.position.z);
-				break;
-			/*case GestureRecognizer.SwipeDirection.Down:
+				switch (direction) {
+				case GestureRecognizer.SwipeDirection.Up:
+					pivot = new Vector3 (transform.position.x + 2.5F, 8, transform.position.z);
+					break;
+				/*case GestureRecognizer.SwipeDirection.Down:
                 pivot = new Vector3 (transform.position.x - 2.5F, 8, transform.position.z);
                 break;*/
-			case GestureRecognizer.SwipeDirection.Left:
-				pivot = new Vector3 (transform.position.x, 8, transform.position.z + 2.5F);
-				break;
-			/*case GestureRecognizer.SwipeDirection.Right:
+				case GestureRecognizer.SwipeDirection.Left:
+					pivot = new Vector3 (transform.position.x, 8, transform.position.z + 2.5F);
+					break;
+				/*case GestureRecognizer.SwipeDirection.Right:
                 pivot = new Vector3 (transform.position.x, 8, transform.position.z - 2.5F);
                 break;*/
 
-			default:
-				Debug.Log ("??");
-				break;
-			}
+				default:
+					Debug.Log ("??");
+					break;
+				}
 				
 //__________________________________Testing Only does not effect phones (I think)_________________________________
 
-            if (Input.anyKey) { // replace with finger down
-				direction = GestureRecognizer.SwipeDirection.Left;
-                pivot = new Vector3 (transform.position.x, transform.position.y, transform.position.z + 2.5F);
-				transform.Rotate (new Vector3 (0, -90, 0));
-            } else {
-				direction = GestureRecognizer.SwipeDirection.Up;
-                pivot = new Vector3 (transform.position.x + 2.5F, transform.position.y, transform.position.z);
-            }
+				if (Input.anyKey) { // replace with finger down
+					direction = GestureRecognizer.SwipeDirection.Left;
+					pivot = new Vector3 (transform.position.x, transform.position.y, transform.position.z + 2.5F);
+					transform.Rotate (new Vector3 (0, -90, 0));
+				} else {
+					direction = GestureRecognizer.SwipeDirection.Up;
+					pivot = new Vector3 (transform.position.x + 2.5F, transform.position.y, transform.position.z);
+				}
+			} else {
+				direction = GestureRecognizer.SwipeDirection.Down;
+			}
 
 		}
 
@@ -115,15 +121,36 @@ public class CharacterMovement : MonoBehaviour {
 //            Debug.Log ("??");
 //            break;
 //        }
+		Debug.Log(direction);
 
-      if (direction == 0) {
-            transform.RotateAround (pivot, Vector3.forward, -speed * Time.deltaTime);
-            transform.Rotate (new Vector3 (0, 0, speed * Time.deltaTime));
-        } else {
-            transform.RotateAround (pivot, Vector3.left, -speed * Time.deltaTime);
-			transform.Rotate (new Vector3 (0, 0, speed * Time.deltaTime));
-        }
+		if (direction == GestureRecognizer.SwipeDirection.Down) {
+			transform.Translate (new Vector3 (0, -5 * Time.deltaTime, 0));
+			transform.Rotate (new Vector3 (0, 360* Time.deltaTime, 0));
+		} else { 
+			if (direction == GestureRecognizer.SwipeDirection.Up) {
+				transform.RotateAround (pivot, Vector3.forward, -speed * Time.deltaTime);
+				transform.Rotate (new Vector3 (0, 0, speed * Time.deltaTime));
+			} else if (direction == GestureRecognizer.SwipeDirection.Left) {
+				transform.RotateAround (pivot, Vector3.left, -speed * Time.deltaTime);
+				transform.Rotate (new Vector3 (0, 0, speed * Time.deltaTime));
+			}
+				
 
-        degrees += speed * Time.deltaTime;
+			degrees += speed * Time.deltaTime;
+		}
     }
+
+
+	void OnTriggerEnter(Collider other) {
+		if (other.CompareTag ("Tile")) {
+			OnFloor = true;
+			Debug.Log ("ENTER");
+		}
+	}
+
+	void OnTriggerExit(Collider other) {
+		if (other.CompareTag ("Tile")) {
+			OnFloor = false;
+		}
+	}
 }
