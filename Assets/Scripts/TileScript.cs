@@ -3,20 +3,27 @@ using System.Collections;
 
 public class TileScript : MonoBehaviour {
 	public int AliveTime = 2;
-	private float DeathTime = 0;
+	private bool fall = false;
 
 	// Use this for initialization
 	void Start () {
-		DeathTime = Time.time + AliveTime;
+		fall = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (DeathTime < Time.time) {
+		if (fall) {
 			transform.Translate (new Vector3 (0, -3 * Time.deltaTime, 0));
 		}
+
 		if (transform.position.y < -5) {
 			Destroy (this.gameObject);
+		}
+	}
+
+	void OnTriggerEnter(Collider other) {
+		if (other.CompareTag ("Player")) {
+			fall = true;
 		}
 	}
 }

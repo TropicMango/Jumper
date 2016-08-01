@@ -4,8 +4,9 @@ using System.Collections;
 public class CharacterMovement : MonoBehaviour {
     private Vector3 pivot;
 	private bool OnFloor=true;
-    public int speed = 250;
-    public double degrees;
+    public float speed = 250;
+    public float degrees;
+	public float Acc = 10F;
 
 
     // TODO: Make this cleaner
@@ -37,6 +38,7 @@ public class CharacterMovement : MonoBehaviour {
 		if (degrees >= 180) {
 			if (OnFloor) {
 				degrees = 0;
+				speed += Acc;
 				transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
 				if (direction == GestureRecognizer.SwipeDirection.Up) {
 					transform.position = new Vector3 (pivot.x + 2.5F, pivot.y, pivot.z);
@@ -121,11 +123,17 @@ public class CharacterMovement : MonoBehaviour {
 //            Debug.Log ("??");
 //            break;
 //        }
-		Debug.Log(direction);
+		//Debug.Log(direction);
 
 		if (direction == GestureRecognizer.SwipeDirection.Down) {
-			transform.Translate (new Vector3 (0, -5 * Time.deltaTime, 0));
-			transform.Rotate (new Vector3 (0, 360* Time.deltaTime, 0));
+			transform.rotation = Quaternion.identity;
+			if (direction == GestureRecognizer.SwipeDirection.Up) {
+				transform.Translate (new Vector3 (0, -5 * Time.deltaTime, speed * Time.deltaTime * 0.01F));
+			} else {
+				transform.Translate (new Vector3 (speed * Time.deltaTime * 0.01F, -5 * Time.deltaTime, 0));
+			}
+			transform.Rotate (new Vector3 (0, degrees, 0));
+
 		} else { 
 			if (direction == GestureRecognizer.SwipeDirection.Up) {
 				transform.RotateAround (pivot, Vector3.forward, -speed * Time.deltaTime);
@@ -135,16 +143,15 @@ public class CharacterMovement : MonoBehaviour {
 				transform.Rotate (new Vector3 (0, 0, speed * Time.deltaTime));
 			}
 				
-
-			degrees += speed * Time.deltaTime;
 		}
+		degrees += speed * Time.deltaTime;
     }
 
 
 	void OnTriggerEnter(Collider other) {
 		if (other.CompareTag ("Tile")) {
 			OnFloor = true;
-			Debug.Log ("ENTER");
+			//Debug.Log ("ENTER");
 		}
 	}
 
