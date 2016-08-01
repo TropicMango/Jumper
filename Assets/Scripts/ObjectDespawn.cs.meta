@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: bb2cc63debb224399959502d0fd3f5f7
-timeCreated: 1470021799
+guid: d88819f339782409d872389b5781601c
+timeCreated: 1470023610
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - FloorBlock: {fileID: 101158, guid: 5e7304fa084834e39b1245f306b3dab2, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

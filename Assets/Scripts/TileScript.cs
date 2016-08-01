@@ -16,14 +16,15 @@ public class TileScript : MonoBehaviour {
 			transform.Translate (new Vector3 (0, -3 * Time.deltaTime, 0));
 		}
 
-		if (transform.position.y < -5) {
-			Destroy (this.gameObject);
-		}
+//		if (transform.position.y < -5) {
+//			Destroy (this.gameObject);
+//		}
 	}
 
 	void OnTriggerEnter(Collider other) {
-		if (other.CompareTag ("Player")) {
+        if (other.CompareTag (Constants.PlayerTag)) {
 			fall = true;
 		}
 	}
+       
 }
