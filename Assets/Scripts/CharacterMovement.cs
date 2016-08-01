@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+
 using System.Collections;
 
 public enum Direction {
@@ -22,10 +24,6 @@ public class CharacterMovement : MonoBehaviour {
 
     void Start () {
 
-        while (Input.touchCount == 0) {
-            yield WaitForSeconds (0.25F);
-        }
-
         UpdatePivot ();
     }
 
@@ -48,11 +46,12 @@ public class CharacterMovement : MonoBehaviour {
     }
 
     void Update () {
-        if (isGameOver)
+        if (isGameOver) {
+            if(Input.touchCount == 1 || Input.anyKey)
+                SceneManager.LoadScene("Game_Main");
             return;
-
-
-
+        }
+           
         if (degrees >= 180) {
             if (OnTile) {
                 degrees = 0;
