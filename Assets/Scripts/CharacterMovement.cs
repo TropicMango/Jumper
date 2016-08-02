@@ -75,7 +75,7 @@ public class CharacterMovement : MonoBehaviour {
 
                 UpdateTransform ();
                 UpdatePivot ();
-                UpdateScore ();
+                //UpdateScore ();
 
                 if (Input.touchCount > 0) {
                     Touch touch = Input.GetTouch (0);
@@ -92,6 +92,7 @@ public class CharacterMovement : MonoBehaviour {
                 // Testing
                
                 if (Input.anyKey) { // replace with finger down
+					Debug.Log("work for me");
                     direction = Direction.Left;
                     transform.Rotate (new Vector3 (0, -90, 0));
                 } else {
