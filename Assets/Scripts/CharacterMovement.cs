@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 using System.Collections;
@@ -11,6 +12,8 @@ public enum Direction {
 public class CharacterMovement : MonoBehaviour {
     private Vector3 pivot;
     public float speed = 250;
+    public float maxSpeed = 1200;
+
     public float degrees;
     public float acceleration = 10F;
 
@@ -20,10 +23,15 @@ public class CharacterMovement : MonoBehaviour {
     public delegate void GameOver ();
     public static event GameOver OnGameOver;
 
+    public int score;
+    public Text scoreLabel; 
     private Direction direction = Direction.Up;
 
-    void Start () {
 
+    void Awake() {
+    }
+
+    void Start () {
         UpdatePivot ();
     }
 
@@ -38,11 +46,17 @@ public class CharacterMovement : MonoBehaviour {
     void UpdatePivot() {
         if (direction == Direction.Up) {
             pivot = new Vector3 (transform.position.x + Constants.TileStep, 
-                                 Constants.TileAltitude, transform.position.z);
+                Constants.PivotAltitude, transform.position.z);
         } else if (direction == Direction.Left) {
-            pivot = new Vector3 (transform.position.x, Constants.TileAltitude, 
+            pivot = new Vector3 (transform.position.x, Constants.PivotAltitude, 
                                  transform.position.z + Constants.TileStep);
         }
+    }
+
+    // TODO: Move this functionality to the Overseer class
+    void UpdateScore() {
+        score += 1;
+        scoreLabel.text = "" + score;
     }
 
     void Update () {
@@ -57,10 +71,11 @@ public class CharacterMovement : MonoBehaviour {
                 degrees = 0;
 
                 transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
-                speed += acceleration;
+                speed += speed < maxSpeed ? acceleration : 0;
 
                 UpdateTransform ();
                 UpdatePivot ();
+                UpdateScore ();
 
                 if (Input.touchCount > 0) {
                     Touch touch = Input.GetTouch (0);
@@ -68,7 +83,7 @@ public class CharacterMovement : MonoBehaviour {
                         || touch.phase == TouchPhase.Stationary
                         || touch.phase == TouchPhase.Moved) {
                         direction = Direction.Left;
-                        transform.Rotate (new Vector3 (0, -90, 0));
+//                        transform.Rotate (new Vector3 (0, -90, 0));
                     } else {
                         direction = Direction.Up;
                     }
@@ -111,6 +126,9 @@ public class CharacterMovement : MonoBehaviour {
                 transform.Translate (new Vector3 (-speed * Time.deltaTime * 0.01F, -5 * Time.deltaTime, 0));
             }
             transform.Rotate (new Vector3 (0, degrees, 0));
+
+            if (transform.position.y < -6)
+                Destroy (this.gameObject);
 
         } else { 
             if (direction == Direction.Up) {

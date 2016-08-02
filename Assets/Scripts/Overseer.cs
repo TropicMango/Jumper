@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Constants {
@@ -11,6 +12,7 @@ public class Constants {
     public const float TileStep = 2.5F;
 
     public const int CharacterAltitude = 8;
+    public const int PivotAltitude = 6;
 }
 
 public class Overseer : MonoBehaviour {
@@ -21,14 +23,20 @@ public class Overseer : MonoBehaviour {
     private float nextGen = 0;
 
     private bool isGameOver = false;
+//    public int score;
+//    public Text scoreLabel; 
 
     private GameObject firstBlock;
 
+//    void Awake() {
+//        score = 0;
+//        scoreLabel = GetComponent<Text> ();
+//    }
     void Start () {
         int startingLine = 3;
 
         for (int i = 0; i < startingLine; i++) {
-            currentLocation = new Vector3 (i * Constants.TileSize, Constants.TileAltitude, 0);
+            currentLocation = new Vector3 ((i * Constants.TileSize) - 1, Constants.TileAltitude, 0);
             GameObject obj = (GameObject)Instantiate (floorBlock, currentLocation, Quaternion.identity);
            
             if (i == 0) {
@@ -51,6 +59,11 @@ public class Overseer : MonoBehaviour {
         if (firstBlock != null)
             firstBlock.transform.Translate (new Vector3 (0, -3 * Time.deltaTime, 0));
     }
+
+//    public void UpdateScore() {
+//        score += 1;
+//        scoreLabel.text = "" + score;
+//    }
        
     void GenerateBlock(){
         Instantiate (floorBlock, currentLocation, Quaternion.identity);
