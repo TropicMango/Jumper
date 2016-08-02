@@ -37,18 +37,18 @@ public class CharacterMovement : MonoBehaviour {
 
     void UpdateTransform() {
         if (direction == Direction.Up) {
-            transform.position = new Vector3 (pivot.x + Constants.TileStep, pivot.y, pivot.z);
+			transform.position = new Vector3 (pivot.x + Constants.TileStep, Constants.PlayerAltitude, pivot.z);
         } else if (direction == Direction.Left) {
-            transform.position = new Vector3 (pivot.x, pivot.y, pivot.z + Constants.TileStep);
+			transform.position = new Vector3 (pivot.x, Constants.PlayerAltitude, pivot.z + Constants.TileStep);
         }
     }
 
     void UpdatePivot() {
         if (direction == Direction.Up) {
             pivot = new Vector3 (transform.position.x + Constants.TileStep, 
-                Constants.PivotAltitude, transform.position.z);
+								 Constants.PlayerAltitude, transform.position.z);
         } else if (direction == Direction.Left) {
-            pivot = new Vector3 (transform.position.x, Constants.PivotAltitude, 
+			pivot = new Vector3 (transform.position.x, Constants.PlayerAltitude, 
                                  transform.position.z + Constants.TileStep);
         }
     }
@@ -83,7 +83,7 @@ public class CharacterMovement : MonoBehaviour {
                         || touch.phase == TouchPhase.Stationary
                         || touch.phase == TouchPhase.Moved) {
                         direction = Direction.Left;
-//                        transform.Rotate (new Vector3 (0, -90, 0));
+
                     } else {
                         direction = Direction.Up;
                     }

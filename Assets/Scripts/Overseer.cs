@@ -5,6 +5,7 @@ using System.Collections;
 public class Constants {
 
     public const string PlayerTag = "Player";
+	public const int PlayerAltitude = 6;
 
     public const string TileTag = "Tile";
     public const int TileSize = 5;
@@ -12,7 +13,6 @@ public class Constants {
     public const float TileStep = 2.5F;
 
     public const int CharacterAltitude = 8;
-    public const int PivotAltitude = 6;
 }
 
 public class Overseer : MonoBehaviour {
