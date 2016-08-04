@@ -12,7 +12,7 @@ public enum Direction {
 public class CharacterMovement : MonoBehaviour {
     private Vector3 pivot;
     public float speed = 250;
-    public float maxSpeed = 1200;
+    public float maxSpeed = 2000;
 
     public float degrees;
     public float acceleration = 10F;
@@ -26,7 +26,6 @@ public class CharacterMovement : MonoBehaviour {
     public int score;
     public Text scoreLabel; 
     private Direction direction = Direction.Up;
-
 
     void Awake() {
     }
@@ -75,7 +74,7 @@ public class CharacterMovement : MonoBehaviour {
 
                 UpdateTransform ();
                 UpdatePivot ();
-                //UpdateScore ();
+                UpdateScore ();
 
                 if (Input.touchCount > 0) {
                     Touch touch = Input.GetTouch (0);
@@ -92,7 +91,6 @@ public class CharacterMovement : MonoBehaviour {
                 // Testing
                
                 if (Input.anyKey) { // replace with finger down
-					Debug.Log("work for me");
                     direction = Direction.Left;
                     transform.Rotate (new Vector3 (0, -90, 0));
                 } else {
@@ -146,13 +144,13 @@ public class CharacterMovement : MonoBehaviour {
 
 
     void OnTriggerEnter(Collider other) {
-        if (other.CompareTag (Constants.TileTag)) {
+        if (other.CompareTag (Constants.TileTag) || other.CompareTag(Constants.EndTileTag)) {
             OnTile = true;
         }
     }
 
     void OnTriggerExit(Collider other) {
-        if (other.CompareTag (Constants.TileTag)) {
+        if (other.CompareTag (Constants.TileTag) || other.CompareTag(Constants.EndTileTag)) {
             OnTile = false;
         }
     }
