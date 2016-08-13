@@ -6,7 +6,9 @@ using System.Collections;
 
 public enum Direction {
     Up,
-    Left
+    Down,
+    Left,
+    Right
 }
 
 public class CharacterMovement : MonoBehaviour {
@@ -116,7 +118,6 @@ public class CharacterMovement : MonoBehaviour {
     }
 
     void LateUpdate() {
-
         if (isGameOver) {
             transform.rotation = Quaternion.identity;
             if (direction == Direction.Up) {

@@ -23,7 +23,7 @@ public class TileScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
         if (other.CompareTag (Constants.PlayerTag)) {
-//			fall = true;
+			fall = true;
 		}
 	}
        

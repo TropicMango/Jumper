@@ -18,6 +18,8 @@ public class Constants {
 public class Overseer : MonoBehaviour {
 
     public GameObject floorBlock;
+    public GameObject character;
+
     private Vector3 currentLocation;
     public float cooldown = 3.0F;
     private float nextGen = 0;
@@ -26,7 +28,6 @@ public class Overseer : MonoBehaviour {
 //    public int score;
 //    public Text scoreLabel; 
 
-//    private GameObject firstBlock;
     private Transform lastEndPoint;
     private GameObject lastChallenge;
 
@@ -38,81 +39,32 @@ public class Overseer : MonoBehaviour {
 //    }
 
     void Start () {
+        character.transform.position = new Vector3 (20 * Constants.TileSize, 6, 20 * Constants.TileSize);
 
-        for(int i = 0; i < 5; i++)
-            InstantiateRandomChallenge ();
-
-//        int startingLine = 3;
-//
-//        for (int i = 0; i < startingLine; i++) {
-//            currentLocation = new Vector3 ((i * Constants.TileSize) - 1, Constants.TileAltitude, 0);
-//            GameObject obj = (GameObject)Instantiate (floorBlock, currentLocation, Quaternion.identity);
-//           
-//            if (i == 0) {
-//                firstBlock = obj;
-//            }
-//        }
-//
-//        for (int i = 0; i < 7; i++) {
-//            GenerateBlock ();
-//        }
+        Level level = new Level (40, 40);
+        GenerateLevel (level);
     }
 
     void Update () {
         if (isGameOver)
             return;
        
-        if (Time.time > nextGen)
-            InstantiateRandomChallenge ();
-
-//        if (firstBlock != null)
-//            firstBlock.transform.Translate (new Vector3 (0, -3 * Time.deltaTime, 0));
-
-    }
-
-    void InstantiateChallenge(string challengeName) {
-        if (lastChallenge == null) {
-            lastChallenge = Instantiate (Resources.Load (challengeName), new Vector3 (-1, 5, 0), Quaternion.identity) as GameObject;
-        }
-
-        lastEndPoint = lastChallenge.GetComponentInChildren<Transform> ().Find ("EndTile");
-
-        Vector3 newStartPoint = Vector3.zero;
-
-        if (Random.Range (0, 2) == 0) {
-            newStartPoint = new Vector3 (lastEndPoint.position.x + Constants.TileSize,
-                Constants.TileAltitude, lastEndPoint.position.z);
-        } else {
-            newStartPoint = new Vector3 (lastEndPoint.position.x, Constants.TileAltitude, 
-                lastEndPoint.position.z + Constants.TileSize);
-        }
-
-        lastChallenge = Instantiate (Resources.Load (challengeName), newStartPoint, Quaternion.identity) as GameObject;
-        nextGen = Time.time + cooldown;
-    }
-
-    void InstantiateRandomChallenge() {
-        int randomIndex = Random.Range (0, possibleChallenges.Length);
-        InstantiateChallenge (possibleChallenges [randomIndex]);
     }
         
-//    public void UpdateScore() {
-//        score += 1;
-//        scoreLabel.text = "" + score;
-//    }
-       
-    void GenerateBlock() {
-        Instantiate (floorBlock, currentLocation, Quaternion.identity);
-        if (Random.Range (0, 2) == 0) {
-            currentLocation.x += Constants.TileSize;
-        } else {
-            currentLocation.z += Constants.TileSize;
-        }
-        nextGen = Time.time + cooldown;
-    }
-
     void GameOver() {
         isGameOver = true;
+    }
+
+    void GenerateLevel(Level level) {
+        bool[,] grid = level.GetLevel ();
+        for (int y = 0; y < level.Height; y++) {
+            for(int x = 0; x < level.Width; x++) { // y is z in this case
+                if (grid [y, x]) {
+                    Vector3 position = new Vector3 (x * Constants.TileSize, Constants.TileAltitude, y * Constants.TileSize);
+                    Instantiate (floorBlock, position, Quaternion.identity);
+                }
+            }
+        }
     }
 
     void OnEnable() {
@@ -124,9 +76,6 @@ public class Overseer : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.CompareTag (Constants.PlayerTag)) {
-//            GenerateBlock ();
-        }
     }
 
 }
